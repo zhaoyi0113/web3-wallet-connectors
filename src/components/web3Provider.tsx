@@ -1,6 +1,6 @@
 import Web3 from 'web3';
 import React, { createContext, useContext } from 'react';
-import { web3 } from './web3Util';
+import { web3 } from '../utils/web3Util';
 
 export const Web3Context = createContext(web3);
 

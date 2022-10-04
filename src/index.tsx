@@ -1,21 +1,24 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { loadCSS } from 'fg-loadcss';
+import { Provider } from 'react-redux';
 import './index.css';
 import { App } from './components/App';
 import reportWebVitals from './components/reportWebVitals';
 import { Web3Provider } from './components/web3Provider';
-import { web3 } from './components/web3Util';
+import { web3 } from './utils/web3Util';
+import { store } from './store';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-loadCSS(
-  'https://use.fontawesome.com/releases/v5.14.0/css/all.css',
-);
+loadCSS('https://use.fontawesome.com/releases/v5.14.0/css/all.css');
+
 root.render(
   <React.StrictMode>
-    <Web3Provider web3={web3}>
-      <App />
-    </Web3Provider>
+    <Provider store={store}>
+      <Web3Provider web3={web3}>
+        <App />
+      </Web3Provider>
+    </Provider>
   </React.StrictMode>
 );
 
