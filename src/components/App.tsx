@@ -7,12 +7,7 @@ import { TooBar  } from './toolBar';
 
 export const App = () => {
   const web3 = useContext(Web3Context);
-  const [open, setOpen] = useState(true);
   const [metaMaskConnected, setMetaMaskConnected] = useState(false);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
 
   useEffect(() => {});
 

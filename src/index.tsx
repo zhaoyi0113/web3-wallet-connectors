@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { loadCSS } from 'fg-loadcss';
 import './index.css';
-import { App } from './App';
-import reportWebVitals from './reportWebVitals';
-import { Web3Provider } from './web3Provider';
-import { web3 } from './web3Util';
+import { App } from './components/App';
+import reportWebVitals from './components/reportWebVitals';
+import { Web3Provider } from './components/web3Provider';
+import { web3 } from './components/web3Util';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 loadCSS(
