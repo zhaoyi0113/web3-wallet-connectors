@@ -11,7 +11,7 @@ export enum MetaMaskConnectionStatus {
 
 export type Web3StoreState = {
   web3: {
-    connection: { metaMask: MetaMaskConnectionStatus };
+    connection: { metaMaskStatus: MetaMaskConnectionStatus };
     accounts: string[];
     currentAccount: { account: string; balance: string };
   };
@@ -48,10 +48,27 @@ const web3Slice = createSlice({
 
 export const { connectMetaMask, getAccountBalance } = web3Slice.actions;
 
-export const getAccountBalanceThunk = async (web3: Web3, dispatch: Dispatch<any>, account: string) => {
-  if (account) {
-    const balance = await web3.eth.getBalance(account);
-    dispatch(getAccountBalance(balance));
+export const getAccountBalanceAction = (web3: Web3|null, currentAccount: any) => {
+  return async (dispatch: Dispatch<any>) => {
+    if (web3 && currentAccount.account) {
+      const balance = await web3.eth.getBalance(currentAccount.account);
+      dispatch(getAccountBalance({ balance }));
+    }
+  };
+};
+
+export const connectMetaMaskAction = (web3: Web3 | null) => async (dispatch: Dispatch<any>) => {
+  try {
+    const accounts = await web3?.givenProvider.enable();
+    dispatch(
+      connectMetaMask({
+        connectionStatus: web3?.givenProvider.isMetaMask ? MetaMaskConnectionStatus.CONNECTED : MetaMaskConnectionStatus.NOT_INSTALL,
+        accounts,
+      })
+    );
+  } catch (err) {
+    console.error(err);
+    dispatch(connectMetaMask(MetaMaskConnectionStatus.FAILED));
   }
 };
 

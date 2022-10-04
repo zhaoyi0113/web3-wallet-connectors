@@ -16,7 +16,6 @@ import { Web3StoreState } from '../features';
 
 export const Menu = () => {
   const [open, setOpen] = useState(true);
-  const [metaMaskConnected, setMetaMaskConnected] = useState(false);
   const accounts = useSelector((state: Web3StoreState) => {
     return state.web3.accounts;
   });
@@ -33,17 +32,10 @@ export const Menu = () => {
         <ListItemText primary="Accounts" />
         {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <DraftsIcon />
-        </ListItemIcon>
-        <ListItemText primary="Drafts" />
-      </ListItemButton>
-
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {accounts.map((account) => (
-            <ListItemButton sx={{ pl: 4 }}>
+            <ListItemButton key={account} sx={{ pl: 4 }}>
               <ListItemIcon>
                 <StarBorder />
               </ListItemIcon>
