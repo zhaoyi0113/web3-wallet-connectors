@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import Web3 from 'web3';
+import { loadCSS } from 'fg-loadcss';
 import './index.css';
 import { App } from './App';
 import reportWebVitals from './reportWebVitals';
@@ -8,7 +8,9 @@ import { Web3Provider } from './web3Provider';
 import { web3 } from './web3Util';
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-
+loadCSS(
+  'https://use.fontawesome.com/releases/v5.14.0/css/all.css',
+);
 root.render(
   <React.StrictMode>
     <Web3Provider web3={web3}>

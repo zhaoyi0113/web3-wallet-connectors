@@ -1,21 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useContext, useState, useEffect } from 'react';
+
+import { Menu } from './menu';
 import './App.css';
+import { Web3Context } from './web3Provider';
+import { TooBar  } from './toolBar';
 
 export const App = () => {
-  
+  const web3 = useContext(Web3Context);
+  const [open, setOpen] = useState(true);
+  const [metaMaskConnected, setMetaMaskConnected] = useState(false);
+
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
+  useEffect(() => {});
+
+  web3?.givenProvider
+    .enable()
+    .then(() => setMetaMaskConnected(web3?.givenProvider.isMetaMask))
+    .catch(() => setMetaMaskConnected(false));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-      </header>
-      <div>
-        <button>Connect MetaMask</button>
-        <button>Disconnect MetaMask</button>
-      </div>
+    <div style={{display: 'flex', flexDirection: 'column'}}>
+      <TooBar />
+      <Menu />
     </div>
   );
 };
