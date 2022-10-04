@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from 'react';
 import List from '@mui/material/List';
 
+import { useSelector } from 'react-redux';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
@@ -11,26 +12,26 @@ import SendIcon from '@mui/icons-material/Send';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
+import { Web3StoreState } from '../features';
 
 export const Menu = () => {
   const [open, setOpen] = useState(true);
   const [metaMaskConnected, setMetaMaskConnected] = useState(false);
-
+  const accounts = useSelector((state: Web3StoreState) => {
+    return state.web3.accounts;
+  });
   const handleClick = () => {
     setOpen(!open);
   };
 
   return (
-    <List
-      sx={{ width: '20%', bgcolor: 'background.paper' }}
-      component="nav"
-      aria-labelledby="nested-list-subheader"
-    >
-      <ListItemButton>
+    <List sx={{ width: '20%', bgcolor: 'background.paper' }} component="nav" aria-labelledby="nested-list-subheader">
+      <ListItemButton onClick={handleClick}>
         <ListItemIcon>
           <SendIcon />
         </ListItemIcon>
-        <ListItemText primary="Connections" />
+        <ListItemText primary="Accounts" />
+        {open ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
@@ -38,23 +39,19 @@ export const Menu = () => {
         </ListItemIcon>
         <ListItemText primary="Drafts" />
       </ListItemButton>
-      <ListItemButton onClick={handleClick}>
-        <ListItemIcon>
-          <InboxIcon />
-        </ListItemIcon>
-        <ListItemText primary="Inbox" />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
+
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
-          <ListItemButton sx={{ pl: 4 }}>
-            <ListItemIcon>
-              <StarBorder />
-            </ListItemIcon>
-            <ListItemText primary="Starred" />
-          </ListItemButton>
+          {accounts.map((account) => (
+            <ListItemButton sx={{ pl: 4 }}>
+              <ListItemIcon>
+                <StarBorder />
+              </ListItemIcon>
+              <ListItemText primary={account} primaryTypographyProps={{overflow: 'hidden !important', whiteSpace: 'nowrap', textOverflow: 'ellipsis !important'}} />
+            </ListItemButton>
+          ))}
         </List>
       </Collapse>
     </List>
-  )
-}
+  );
+};
