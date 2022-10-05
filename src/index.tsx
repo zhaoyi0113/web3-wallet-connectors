@@ -8,6 +8,9 @@ import reportWebVitals from './components/reportWebVitals';
 import { Web3Provider } from './components/web3Provider';
 import { web3 } from './utils/web3Util';
 import { store } from './store';
+import { listenOnEthereumEvents } from './features';
+
+listenOnEthereumEvents(web3, store);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 loadCSS('https://use.fontawesome.com/releases/v5.14.0/css/all.css');

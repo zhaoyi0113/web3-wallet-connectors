@@ -5,7 +5,7 @@ import { Menu } from './menu';
 import './App.css';
 import { Web3Context } from './web3Provider';
 import { TooBar } from './toolBar';
-import { connectMetaMaskAction, getAccountBalanceAction, MetaMaskConnectionStatus, Web3StoreState } from '../features';
+import { connectMetaMaskAction, getAccountBalanceAction, isMetaMaskConnectedAction, MetaMaskConnectionStatus, Web3StoreState } from '../features';
 import { Alert } from './alert';
 import Web3 from 'web3';
 
@@ -18,12 +18,14 @@ export const App = () => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch<any>(getAccountBalanceAction(web3, currentAccount));
+    dispatch<any>(isMetaMaskConnectedAction(web3));
   }, [currentAccount?.account]);
 
-  useEffect(() => {
-    dispatch<any>(connectMetaMaskAction(web3));
-  }, [metaMaskConnectionStatus]);
+  if (web3) {
+    web3.givenProvider.on('accountsChanged', (accounts: string[]) => {
+      
+    });
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>

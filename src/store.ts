@@ -1,14 +1,12 @@
 import { configureStore } from '@reduxjs/toolkit';
 import thunkMiddleware from 'redux-thunk';
-import { web3 } from './utils';
-import web3Reducer, { connectMetaMask, MetaMaskConnectionStatus } from './features/web3/web3Slice';
-
+import web3Reducer from './features/web3/web3Slice';
 
 export const store = configureStore({
   reducer: {
     web3: web3Reducer,
   },
-  middleware: [thunkMiddleware]
+  middleware: [thunkMiddleware],
 });
 
 // if (web3) {
@@ -23,7 +21,7 @@ export const store = configureStore({
 //       );
 //     })
 //     .catch(() => store.dispatch(connectMetaMask(MetaMaskConnectionStatus.FAILED)));
-  
+
 // } else {
 //   console.error('web3 is not install.');
 //   store.dispatch(connectMetaMask(MetaMaskConnectionStatus.NOT_INSTALL));
