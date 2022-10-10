@@ -13,7 +13,7 @@ export type Web3StoreState = {
   web3: {
     connection: { metaMaskStatus: MetaMaskConnectionStatus };
     accounts: string[];
-    currentAccount: { account: string; balance: string };
+    currentAccount: { account: string; balance: string, transactionCount: number };
   };
 };
 
@@ -36,26 +36,21 @@ const web3Slice = createSlice({
       }
       return { ...state, connection: { metaMask: action.payload.connectionStatus }, accounts: action.payload.accounts, currentAccount };
     },
-    getAccountBalance: (state, action) => {
-      const { balance } = action.payload;
+    setAccountInfo: (state, action) => {
+      const { balance, transactionCount } = action.payload;
       const { currentAccount } = state;
-      return { ...state, currentAccount: { ...currentAccount, balance } };
+      return { ...state, currentAccount: { ...currentAccount, balance, transactionCount } };
+    },
+    setNetworkChainId: (state, action) => {
+      const { networkId, chainId } = action.payload;
+      return { ...state, networkId, chainId };
     },
   },
 });
 
 // actions
 
-export const { connectMetaMask, getAccountBalance } = web3Slice.actions;
-
-export const getAccountBalanceAction = (web3: Web3 | null, currentAccount: any) => {
-  return async (dispatch: Dispatch<any>) => {
-    if (web3 && currentAccount.account) {
-      const balance = await web3.eth.getBalance(currentAccount.account);
-      dispatch(getAccountBalance({ balance }));
-    }
-  };
-};
+export const { connectMetaMask, setAccountInfo } = web3Slice.actions;
 
 const dispatchMetaMaskAccounts = async (web3: Web3 | null, dispatch: Dispatch<any>, accounts: string[]) => {
   if (accounts) {
@@ -66,7 +61,8 @@ const dispatchMetaMaskAccounts = async (web3: Web3 | null, dispatch: Dispatch<an
       })
     );
     const balance = await web3?.eth.getBalance(accounts[0]);
-    dispatch(getAccountBalance({ balance }));
+    const transactionCount = await web3?.eth.getTransactionCount(accounts[0]);
+    dispatch(setAccountInfo({ balance, transactionCount }));
   }
 };
 
@@ -98,7 +94,7 @@ export const listenOnEthereumEvents = (web3: Web3 | null, store: any) => {
   const changeHandler = (newAccounts: string[]) => {
     console.log('account changed', newAccounts);
     store.dispatch(isMetaMaskConnectedAction(web3));
-  }
+  };
   web3?.givenProvider.on('accountsChanged', changeHandler);
   web3?.givenProvider.on('networkChanged', changeHandler);
   web3?.givenProvider.on('chainChanged', changeHandler);

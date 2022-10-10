@@ -1,13 +1,22 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Outlet } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import Container from '@mui/material/Container';
 
 import { Menu } from './menu';
 import './App.css';
 import { Web3Context } from './web3Provider';
 import { TooBar } from './toolBar';
-import { connectMetaMaskAction, getAccountBalanceAction, isMetaMaskConnectedAction, MetaMaskConnectionStatus, Web3StoreState } from '../features';
+import { isMetaMaskConnectedAction, MetaMaskConnectionStatus, Web3StoreState } from '../features';
 import { Alert } from './alert';
-import Web3 from 'web3';
+
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
 
 export const App = () => {
   const web3 = useContext(Web3Context);
@@ -22,21 +31,25 @@ export const App = () => {
   }, [currentAccount?.account]);
 
   if (web3) {
-    web3.givenProvider.on('accountsChanged', (accounts: string[]) => {
-      
-    });
+    web3.givenProvider.on('accountsChanged', (accounts: string[]) => {});
   }
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column' }}>
-      <TooBar />
-      <Menu />
-      {metaMaskConnectionStatus === MetaMaskConnectionStatus.NOT_INSTALL ? (
-        <Alert title="Error" message="Meta Mask is not installed on this browser" />
-      ) : null}
-      {metaMaskConnectionStatus === MetaMaskConnectionStatus.FAILED ? (
-        <Alert title="Error" message="Failed to connect to Meta Mask" />
-      ) : null}
-    </div>
+    <ThemeProvider theme={darkTheme}>
+      <CssBaseline />
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <TooBar />
+        <Menu />
+        <Container maxWidth="sm">
+          <Outlet />
+        </Container>
+        {metaMaskConnectionStatus === MetaMaskConnectionStatus.NOT_INSTALL ? (
+          <Alert title="Error" message="Meta Mask is not installed on this browser" />
+        ) : null}
+        {metaMaskConnectionStatus === MetaMaskConnectionStatus.FAILED ? (
+          <Alert title="Error" message="Failed to connect to Meta Mask" />
+        ) : null}
+      </div>
+    </ThemeProvider>
   );
 };

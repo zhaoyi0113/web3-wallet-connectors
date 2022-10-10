@@ -7,19 +7,25 @@ import { App } from './components/App';
 import reportWebVitals from './components/reportWebVitals';
 import { Web3Provider } from './components/web3Provider';
 import { web3 } from './utils/web3Util';
+
 import { store } from './store';
 import { listenOnEthereumEvents } from './features';
-
+import { router } from './router';
+import {
+  RouterProvider,
+} from "react-router-dom";
 listenOnEthereumEvents(web3, store);
 
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 loadCSS('https://use.fontawesome.com/releases/v5.14.0/css/all.css');
 
+
 root.render(
   <React.StrictMode>
     <Provider store={store}>
       <Web3Provider web3={web3}>
-        <App />
+        {/* <App /> */}
+        <RouterProvider router={router} />
       </Web3Provider>
     </Provider>
   </React.StrictMode>

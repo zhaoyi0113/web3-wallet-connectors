@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import List from '@mui/material/List';
+import { Link } from 'react-router-dom';
 
 import { useSelector } from 'react-redux';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -35,12 +36,17 @@ export const Menu = () => {
       <Collapse in={open} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {accounts.map((account) => (
-            <ListItemButton key={account} sx={{ pl: 4 }}>
-              <ListItemIcon>
-                <StarBorder />
-              </ListItemIcon>
-              <ListItemText primary={account} primaryTypographyProps={{overflow: 'hidden !important', whiteSpace: 'nowrap', textOverflow: 'ellipsis !important'}} />
-            </ListItemButton>
+            <Link key={account} to={`account/${account}`}>
+              <ListItemButton key={account} sx={{ pl: 4 }}>
+                <ListItemIcon>
+                  <StarBorder />
+                </ListItemIcon>
+                <ListItemText
+                  primary={account}
+                  primaryTypographyProps={{ overflow: 'hidden !important', whiteSpace: 'nowrap', textOverflow: 'ellipsis !important' }}
+                />
+              </ListItemButton>
+            </Link>
           ))}
         </List>
       </Collapse>

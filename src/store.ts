@@ -8,21 +8,3 @@ export const store = configureStore({
   },
   middleware: [thunkMiddleware],
 });
-
-// if (web3) {
-//   web3.givenProvider
-//     .enable()
-//     .then((accounts: string[]) => {
-//       store.dispatch(
-//         connectMetaMask({
-//           connectionStatus: web3?.givenProvider.isMetaMask ? MetaMaskConnectionStatus.CONNECTED : MetaMaskConnectionStatus.NOT_INSTALL,
-//           accounts,
-//         })
-//       );
-//     })
-//     .catch(() => store.dispatch(connectMetaMask(MetaMaskConnectionStatus.FAILED)));
-
-// } else {
-//   console.error('web3 is not install.');
-//   store.dispatch(connectMetaMask(MetaMaskConnectionStatus.NOT_INSTALL));
-// }
