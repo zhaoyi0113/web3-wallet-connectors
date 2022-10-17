@@ -13,7 +13,7 @@ export type Web3StoreState = {
   web3: {
     connection: { metaMaskStatus: MetaMaskConnectionStatus };
     accounts: string[];
-    currentAccount: { account: string; balance: string, transactionCount: number };
+    currentAccount: { account: string; balance: string; transactionCount: number };
   };
 };
 
@@ -53,7 +53,7 @@ const web3Slice = createSlice({
 export const { connectMetaMask, setAccountInfo } = web3Slice.actions;
 
 const dispatchMetaMaskAccounts = async (web3: Web3 | null, dispatch: Dispatch<any>, accounts: string[]) => {
-  if (accounts) {
+  if (accounts && accounts.length > 0) {
     dispatch(
       connectMetaMask({
         connectionStatus: web3?.givenProvider.isMetaMask ? MetaMaskConnectionStatus.CONNECTED : MetaMaskConnectionStatus.NOT_INSTALL,
@@ -62,7 +62,22 @@ const dispatchMetaMaskAccounts = async (web3: Web3 | null, dispatch: Dispatch<an
     );
     const balance = await web3?.eth.getBalance(accounts[0]);
     const transactionCount = await web3?.eth.getTransactionCount(accounts[0]);
+    // const asset = await web3?.givenProvider.request({
+    //   method: 'wallet_watchAsset',
+    //   params: {
+    //     type: 'ERC20',
+    //     options: {
+    //       address: accounts[0],
+    //       symbol: 'WONE',
+    //       decimals: 18,
+    //       // image: 'https://s2.coinmarketcap.com/static/img/coins/64x64/11696.png',
+    //     },
+    //   },
+    // });
+    // console.log('get assets:', asset);
     dispatch(setAccountInfo({ balance, transactionCount }));
+  } else {
+    console.warn('cant get accounts');
   }
 };
 
@@ -84,6 +99,7 @@ export const isMetaMaskConnectedAction = (web3: Web3 | null) => async (dispatch:
     const accounts = await (window as any).ethereum.request({
       method: 'eth_accounts',
     });
+    console.log('get accounts:', accounts);
     await dispatchMetaMaskAccounts(web3, dispatch, accounts);
   } catch (err) {
     console.error(err);

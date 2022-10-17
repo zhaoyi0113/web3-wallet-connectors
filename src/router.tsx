@@ -1,7 +1,7 @@
 import { createBrowserRouter, RouterProvider, Route, Link } from 'react-router-dom';
-import { createRoot } from 'react-dom/client';
 import { App } from './components/App';
 import { Account } from './components/account';
+import { DeployContract } from './components/deployContract';
 
 export const router = createBrowserRouter([
   {
@@ -12,6 +12,10 @@ export const router = createBrowserRouter([
         path: 'account/:account',
         element: <Account></Account>,
       },
+      {
+        path: 'contract/deploy-contract',
+        element: <DeployContract></DeployContract>
+      }
     ],
   },
 ]);

@@ -15,25 +15,30 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import StarBorder from '@mui/icons-material/StarBorder';
 import { Web3StoreState } from '../features';
 
+enum MenuType {
+  ACCOUNT,
+  CONTRACTS,
+}
+
 export const Menu = () => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState<MenuType | null>(null);
   const accounts = useSelector((state: Web3StoreState) => {
     return state.web3.accounts;
   });
-  const handleClick = () => {
-    setOpen(!open);
+  const handleClick = (type: MenuType) => {
+    open === type ? setOpen(null) : setOpen(type);
   };
 
   return (
     <List sx={{ width: '20%', bgcolor: 'background.paper' }} component="nav" aria-labelledby="nested-list-subheader">
-      <ListItemButton onClick={handleClick}>
+      <ListItemButton onClick={() => handleClick(MenuType.ACCOUNT)}>
         <ListItemIcon>
           <SendIcon />
         </ListItemIcon>
         <ListItemText primary="Accounts" />
-        {open ? <ExpandLess /> : <ExpandMore />}
+        {open !== MenuType.ACCOUNT ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse in={open} timeout="auto" unmountOnExit>
+      <Collapse in={open === MenuType.ACCOUNT} timeout="auto" unmountOnExit>
         <List component="div" disablePadding>
           {accounts.map((account) => (
             <Link key={account} to={`account/${account}`}>
@@ -43,11 +48,35 @@ export const Menu = () => {
                 </ListItemIcon>
                 <ListItemText
                   primary={account}
-                  primaryTypographyProps={{ overflow: 'hidden !important', whiteSpace: 'nowrap', textOverflow: 'ellipsis !important' }}
+                  primaryTypographyProps={{
+                    color: 'primary',
+                    overflow: 'hidden !important',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis !important',
+                  }}
                 />
               </ListItemButton>
             </Link>
           ))}
+        </List>
+      </Collapse>
+      <ListItemButton onClick={() => handleClick(MenuType.CONTRACTS)}>
+        <ListItemIcon>
+          <SendIcon />
+        </ListItemIcon>
+        <ListItemText primary="Contracts" />
+        {open !== MenuType.CONTRACTS ? <ExpandLess /> : <ExpandMore />}
+      </ListItemButton>
+      <Collapse in={open === MenuType.CONTRACTS}>
+        <List component="div">
+            <Link to={`contract/deploy-contract`}>
+          <ListItemButton>
+            <ListItemIcon>
+              <StarBorder />
+            </ListItemIcon>
+            <ListItemText primaryTypographyProps={{ color: 'primary' }}>Deploy Contract</ListItemText>
+          </ListItemButton>
+          </Link>
         </List>
       </Collapse>
     </List>
